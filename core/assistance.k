@@ -7,6 +7,8 @@
 
 module assistance
 
+import "k:fsx"
+
 // Compile `srcPath` to Krypton IR via the checked-out frontend and return
 // the full IR text on stdout. The KRYPTON_ROOT environment variable is
 // required (tells the frontend where its stdlib lives). On failure prints
