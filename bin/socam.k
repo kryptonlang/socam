@@ -29,9 +29,13 @@ func showHelp() {
     print("  socam list [<dir>]         List .k files recursively")
     print("  socam gen <name>           Emit starter module <name>.k")
     print("  socam new app <Name>       Scaffold a new AppKit-ready Krypton app")
-    print("  socam gen window           Print window-initialization snippet")
+    print("  socam gen window           Print window snippet")
+    print("  socam gen stack            NSStackView snippet")
+    print("  socam gen split            NSSplitView snippet (sidebar|content)")
+    print("  socam gen table            NSTableView snippet (auto-columns from --columns=)")
     print("  socam gen button           Print button-initialization snippet")
     print("  socam gen label            Print label-initialization snippet")
+    print("  socam gen delegate         Print objk delegate stub (--protocol=NSWindowDelegate)")
     print("  socam watch                Watch main.k, rebuild and relaunch on change")
     print("")
     print("environment:")
@@ -46,7 +50,7 @@ func showHelp() {
 }
 
 func showVersion() {
-    print("socam 0.2.0 (Krypton + SmackUI)")
+    print("socam 0.3.0 (Krypton + SmackUI)")
 }
 
 func cmdExplain() {
@@ -138,7 +142,7 @@ func cmdGen() {
         exit("1")
     }
     let target = arg(1)
-    if target == "window" || target == "button" || target == "label" {
+    if target == "window" || target == "button" || target == "label" || target == "stack" || target == "split" || target == "table" || target == "delegate" {
         let flags = nameFromArgs(2)
         emitSnippet(target, flags)
         exit("0")
