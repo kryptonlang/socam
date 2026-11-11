@@ -10,8 +10,8 @@
 //
 // Exit codes: 0 ok, 1 user/usage error, 2 internal failure.
 
-import "/Users/t3m3d/Documents/GitHub/socam/core/assistance.k"
-import "/Users/t3m3d/Documents/GitHub/socam/core/dispatch.k"
+import "./core/assistance.k"
+import "./core/dispatch.k"
 import "k:fsx"
 
 func showHelp() {
@@ -26,12 +26,18 @@ func showHelp() {
     print("  socam gen <name>           Emit starter module <name>.k")
     print("")
     print("environment:")
-    print("  KRYPTON_ROOT       Override the repo root (for KCC_FRONTEND)")
-    print("  KCC_FRONTEND       Override the frontend binary")
+    print("  KRYPTON_ROOT       Override the repo root (for kcc-arm64)")
+    print("  KCC_FRONTEND       Override the frontend binary (wins over KRYPTON_ROOT)")
+    print("")
+    print("resolution order for the compiler (first match wins):")
+    print("  1. $KRYPTON_ROOT/compiler/macos_arm64/kcc-arm64")
+    print("  2. /usr/local/krypton/compiler/macos_arm64/kcc-arm64")
+    print("  3. <cwd>/compiler/macos_arm64/kcc-arm64")
+    print("  4. <cwd>/../krypton/compiler/macos_arm64/kcc-arm64")
 }
 
 func showVersion() {
-    print("socam 0.1.0 (Krypton + SmackUI)")
+    print("socam 0.1.1 (Krypton + SmackUI)")
 }
 
 func cmdExplain() {

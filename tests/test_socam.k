@@ -1,7 +1,6 @@
 // tests/test_socam.k — Smoke tests for the socam binary.
 //
-// Builds bin/socam.k from the directory this script lives in (the socam
-// repo), then verifies the basic CLI surface end-to-end:
+// Builds bin/socam.k from the directory this script lives in (the socam repo), then verifies the basic CLI surface end-to-end:
 //   socam --version  -> exit 0
 //   socam explain    -> exit 0, prints "; Krypton IR"
 //   socam list       -> lists .k files, exit 0

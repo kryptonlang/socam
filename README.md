@@ -19,9 +19,16 @@ socam gen <name>            Emit a starter module <name>.k
 Environment variables:
 
 ```
-KRYPTON_ROOT          Repo root (used to locate the toolchain)
-KCC_FRONTEND          Override ./compiler/macos_arm64/kcc-arm64 directly
+KRYPTON_ROOT          Repo root override (first try)
+KCC_FRONTEND          Absolute path to kcc-arm64 (wins over KRYPTON_ROOT)
 ```
+
+Toolchain resolution order (first match wins):
+
+1. `$KRYPTON_ROOT/compiler/macos_arm64/kcc-arm64`
+2. `/usr/local/krypton/compiler/macos_arm64/kcc-arm64` (installed toolchain)
+3. `<cwd>/compiler/macos_arm64/kcc-arm64` (running inside a krypton checkout)
+4. `<cwd>/../krypton/compiler/macos_arm64/kcc-arm64` (sibling checkout)
 
 ## Build
 
