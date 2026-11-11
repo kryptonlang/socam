@@ -12,7 +12,11 @@
 
 import "./core/assistance.k"
 import "./core/dispatch.k"
+import "./core/scaffold.k"
+import "./core/gen.k"
+import "./core/watch.k"
 import "k:fsx"
+import "k:sh"
 
 func showHelp() {
     print("socam (Smack Open-Code Assistance Mechanism)")
@@ -24,6 +28,11 @@ func showHelp() {
     print("  socam grep <pat> <file>    Print matching lines (prefix match)")
     print("  socam list [<dir>]         List .k files recursively")
     print("  socam gen <name>           Emit starter module <name>.k")
+    print("  socam new app <Name>       Scaffold a new AppKit-ready Krypton app")
+    print("  socam gen window           Print window-initialization snippet")
+    print("  socam gen button           Print button-initialization snippet")
+    print("  socam gen label            Print label-initialization snippet")
+    print("  socam watch                Watch main.k, rebuild and relaunch on change")
     print("")
     print("environment:")
     print("  KRYPTON_ROOT       Override the repo root (for kcc-arm64)")
@@ -37,7 +46,7 @@ func showHelp() {
 }
 
 func showVersion() {
-    print("socam 0.1.1 (Krypton + SmackUI)")
+    print("socam 0.2.0 (Krypton + SmackUI)")
 }
 
 func cmdExplain() {
@@ -97,12 +106,48 @@ func cmdList() {
     }
 }
 
+func nameFromArgs(startIdx) {
+    let map = ""
+    let i = startIdx
+    while i < argCount() {
+        let tok = arg(i)
+        let eq = indexOf(tok, "=")
+        if startsWith(tok, "--") && eq > 2 {
+            let key = substring(tok, 2, eq)
+            let val = substring(tok, eq + 1, len(tok))
+            map = map + "|" + key + "=" + val
+        }
+        i += 1
+    }
+    emit map
+}
+
+func flagValue(map, key, defVal) {
+    let needle = "|" + key + "="
+    let idx = indexOf(map, needle)
+    if idx < 0 { emit defVal }
+    let start = idx + len(needle)
+    let end = indexOf(map, "|", start)
+    if end < 0 { emit substring(map, start, len(map)) }
+    emit substring(map, start, end)
+}
+
 func cmdGen() {
     if argCount() < 2 {
-        print("usage: socam gen <name>\n")
+        print("usage: socam gen <name|window|button|label|watch> [--key=value ...]\n")
         exit("1")
     }
-    let name = arg(1)
+    let target = arg(1)
+    if target == "window" || target == "button" || target == "label" {
+        let flags = nameFromArgs(2)
+        emitSnippet(target, flags)
+        exit("0")
+    }
+    if target == "watch" {
+        watchLoop("main.k", "main")
+        exit("0")
+    }
+    let name = target
     let outPath = name + ".k"
     if exists(outPath) {
         print("socam: " + outPath + " already exists\n")
@@ -123,6 +168,24 @@ func cmdGen() {
     print("socam: wrote " + outPath)
 }
 
+func cmdNew() {
+    if argCount() < 3 {
+        print("usage: socam new app <ProjectName>\n")
+        exit("1")
+    }
+    let kind = arg(1)
+    if kind != "app" {
+        print("socam new: only 'app' is supported\n")
+        exit("1")
+    }
+    let name = arg(2)
+    newAppApp(name)
+}
+
+func cmdWatch() {
+    watchLoop("main.k", "main")
+}
+
 just run {
     let n = argCount()
     if n == 0 {
@@ -137,6 +200,14 @@ just run {
     }
     if route == "version" {
         showVersion()
+        exit("0")
+    }
+    if route == "new" {
+        cmdNew()
+        exit("0")
+    }
+    if route == "watch" {
+        cmdWatch()
         exit("0")
     }
     if route == "explain" {
