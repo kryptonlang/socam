@@ -28,7 +28,10 @@ just run {
         print("SOCAM_ROOT must point at the socam repo.\n")
         exit("1")
     }
-    let build = shellRun(driver + " " + q(src) + " -o " + q(socamBin))
+    // Krypton's frontend resolves relative imports against the caller's cwd,
+    // not the importing file, so build from the socam repo root or the
+    // "./core/*.k" imports in bin/socam.k silently vanish from the IR.
+    let build = shellRun("cd " + q(sroot) + " && " + q(driver) + " " + q(src) + " -o " + q(socamBin))
     if build != "0" {
         print("socam build failed (rc=" + build + ")\n")
         exit("1")

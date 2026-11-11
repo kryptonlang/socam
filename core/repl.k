@@ -26,7 +26,7 @@ func pollReplyFile(ntimes) {
     let i = 0
     while i < ntimes {
         if exists("/tmp/socam.reply") == "1" { emit "1" }
-        sleepUs(25000, 0)
+        sleepUs(0, 25000)
         i += 1
     }
     emit "0"
