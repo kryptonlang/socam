@@ -36,6 +36,8 @@ func showHelp() {
     print("  socam gen button           Print button-initialization snippet")
     print("  socam gen label            Print label-initialization snippet")
     print("  socam gen delegate         Print objk delegate stub (--protocol=NSWindowDelegate)")
+    print("  socam gen asset            Typed NSImage/NSColor accessors")
+    print("  socam asset icons <png>    make .iconset folder + Contents.json from a master PNG")
     print("  socam watch                Watch main.k, rebuild and relaunch on change")
     print("")
     print("environment:")
@@ -50,7 +52,7 @@ func showHelp() {
 }
 
 func showVersion() {
-    print("socam 0.3.0 (Krypton + SmackUI)")
+    print("socam 0.4.0 (Krypton + SmackUI)")
 }
 
 func cmdExplain() {
@@ -172,6 +174,24 @@ func cmdGen() {
     print("socam: wrote " + outPath)
 }
 
+func cmdAsset() {
+    if argCount() < 2 {
+        print("usage: socam asset icons <source.png>\n")
+        exit("1")
+    }
+    let sub = arg(1)
+    if sub == "icons" {
+        if argCount() < 3 {
+            print("usage: socam asset icons <source.png>\n")
+            exit("1")
+        }
+        buildIconset(arg(2))
+        exit("0")
+    }
+    print("socam asset: unknown subcommand '" + sub + "'\n")
+    exit("1")
+}
+
 func cmdNew() {
     if argCount() < 3 {
         print("usage: socam new app <ProjectName>\n")
@@ -208,6 +228,10 @@ just run {
     }
     if route == "new" {
         cmdNew()
+        exit("0")
+    }
+    if route == "asset" {
+        cmdAsset()
         exit("0")
     }
     if route == "watch" {

@@ -13,6 +13,7 @@ func matchRoute(cmd) {
     if cmd == "grep"    { emit "grep" }
     if cmd == "list"    { emit "list" }
     if cmd == "gen"     { emit "gen" }
+    if cmd == "asset"   { emit "asset" }
     if cmd == "new"     { emit "new" }
     if cmd == "watch"   { emit "watch" }
     if cmd == "version" { emit "version" }
