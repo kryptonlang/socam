@@ -16,6 +16,16 @@ func writeOnce(path, body) {
     writeText(path, body)
 }
 
+func argHasFlag(key) {
+    let i = 0
+    while i < argCount() {
+        let tok = arg(i)
+        if tok == "--" + key { emit "1" }
+        i += 1
+    }
+    emit "0"
+}
+
 func newAppApp(name) {
     if exists(name) == "1" {
         print("socam new app: " + name + " already exists\n")
@@ -26,14 +36,62 @@ func newAppApp(name) {
         exit("1")
     }
 
+    let withBridge = argHasFlag("bridge") == "1"
+
     // Self-creating parent directory from caller cwd
     mkdirp(name)
+
+    let bridgeSrc =
+        "import \"k:cocoa\"\n" +
+        "import \"k:fsx\"\n" +
+        "import \"k:sh\"\n" +
+        "import \"k:okui\"\n" +
+        "\n" +
+        "func _bridgeHandler(self, cmdsel, notif) {\n" +
+        "    let cmd = msg(notif, \"object\")\n" +
+        "    let tval = nsToStr(cmd)\n" +
+        "    let out = \"\"\n" +
+        "    if tval == \"dump\" {\n" +
+        "        let app = msg(cls(\"NSApplication\"), \"sharedApplication\")\n" +
+        "        let wins = msg(app, \"windows\")\n" +
+        "        let count = msg(wins, \"count\")\n" +
+        "        out = \"windows=\" + count + \"\\n\"\n" +
+        "    } else if tval == \"border\" {\n" +
+        "        out = \"border-on\\n\"\n" +
+        "    } else if tval == \"reload\" {\n" +
+        "        out = \"reload\\n\"\n" +
+        "    } else if tval == \"quit\" {\n" +
+        "        exit(\"0\")\n" +
+        "    } else {\n" +
+        "        out = \"unknown: \" + tval + \"\\n\"\n" +
+        "    }\n" +
+        "    writeText(\"/tmp/socam.reply\", out)\n" +
+        "    emit 0\n" +
+        "}\n" +
+        "func installBridge() {\n" +
+        "    let c = objc_lookUpClass(\"SocamBridge\")\n" +
+        "    if c == 0 {\n" +
+        "        c = objc_allocateClassPair(cls(\"NSObject\"), \"SocamBridge\", 0)\n" +
+        "        if c == 0 { printErr(\"bridge: alloc\\n\"); emit \"0\" }\n" +
+        "        if chocClassAddMethod(c, \"socamCommand:\", funcptr(_bridgeHandler), \"v@:@\") == \"0\" {\n" +
+        "            printErr(\"bridge: addMethod\\n\"); emit \"0\"\n" +
+        "        }\n" +
+        "        cocoaClassRegister(c)\n" +
+        "    }\n" +
+        "    let inst = cocoaNew(c)\n" +
+        "    let center = msg(cls(\"NSDistributedNotificationCenter\"), \"defaultCenter\")\n" +
+        "    let _ = msg_4(center, \"addObserver:selector:name:object:\",\n" +
+        "              inst, sel(\"socamCommand:\"), nsString(\"socam/command\"), 0)\n" +
+        "    printErr(\"socam bridge: listening for commands\\n\")\n" +
+        "}\n" +
+        "\n"
 
     let main =
         "// " + name + " - Krypton AppKit starter\n" +
         "\n" +
         "import \"k:okui\"\n" +
         "\n" +
+        (withBridge ? bridgeSrc : "") +
         "func target() {\n" +
         "    print(\"click!\")\n" +
         "    emit 0\n" +
@@ -45,6 +103,7 @@ func newAppApp(name) {
         "    let win = okWindow(app, \"" + name + "\", 460, 240)\n" +
         "    let label = okLabel(win, \"" + name + " — rendered by Krypton + Objective-K\", 20, 20, 420, 28)\n" +
         "    okShow(win, app)\n" +
+        (withBridge ? "    installBridge()\n" : "") +
         "    okRun(app)\n" +
         "    okDrainPool(pool)\n" +
         "}\n"

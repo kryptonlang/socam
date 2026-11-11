@@ -16,8 +16,11 @@ import "./core/scaffold.k"
 import "./core/gen.k"
 import "./core/watch.k"
 import "./core/pack.k"
+import "k:okui"
+import "k:cocoa"
 import "k:fsx"
 import "k:sh"
+import "./core/repl.k"
 
 func showHelp() {
     print("socam (Smack Open-Code Assistance Mechanism)")
@@ -38,9 +41,12 @@ func showHelp() {
     print("  socam gen label            Print label-initialization snippet")
     print("  socam gen delegate         Print objk delegate stub (--protocol=NSWindowDelegate)")
     print("  socam gen binding          Print KVO binding stub (--target=… --property=…)")
+    print("  socam gen menu             Print NSMenu + NSMenuItem allocations (--title=… --items=…)")
+    print("  socam gen statusbar        Print NSStatusBar + NSStatusItem stub (--title=… --icon=… --menu=A,B)")
     print("  socam gen asset            Typed NSImage/NSColor accessors")
     print("  socam asset icons <png>    make .iconset folder + Contents.json from a master PNG")
     print("  socam pack [--app=Foo.app] [--sign] [--dmg] [--iconset=iconset]  sign + dmg-ify")
+    print("  socam repl                 Live IPC session to the running app (dump|border|reload|quit)")
     print("  socam watch                Watch main.k, rebuild and relaunch on change")
     print("")
     print("environment:")
@@ -55,7 +61,7 @@ func showHelp() {
 }
 
 func showVersion() {
-    print("socam 0.5.0 (Krypton + SmackUI)")
+    print("socam 0.6.0 (Krypton + SmackUI)")
 }
 
 func cmdExplain() {
@@ -147,7 +153,7 @@ func cmdGen() {
         exit("1")
     }
     let target = arg(1)
-    if target == "window" || target == "button" || target == "label" || target == "stack" || target == "split" || target == "table" || target == "delegate" || target == "binding" {
+    if target == "window" || target == "button" || target == "label" || target == "stack" || target == "split" || target == "table" || target == "delegate" || target == "binding" || target == "menu" || target == "statusbar" {
         let flags = nameFromArgs(2)
         emitSnippet(target, flags)
         exit("0")
@@ -252,6 +258,10 @@ just run {
     }
     if route == "watch" {
         cmdWatch()
+        exit("0")
+    }
+    if route == "repl" {
+        cmdRepl()
         exit("0")
     }
     if route == "explain" {

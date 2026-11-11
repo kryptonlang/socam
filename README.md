@@ -45,6 +45,28 @@ core/dispatch.k      Route names and shared context
 tests/test_socam.k   Smoke tests (help, version, list, gen)
 ```
 
+
+## Milestones 6 and 10 (v0.6.0)
+
+* `socam repl` — interactive IPC session talking to a running bridged app. One-shot form: `socam repl dump`.
+* `socam new app <Name> --bridge` — scaffolds a Krypton AppKit app with a runtime bridge listening on `socam/command` (via `NSDistributedNotificationCenter`). Commands: `dump`, `border`, `reload`, `quit`.
+* `socam gen menu --title=… --items=…` — NSMenu + NSMenuItem stub with optional `--keys=…`.
+* `socam gen statusbar --title=… --icon=… --menu=…` — NSStatusBar + NSStatusItem scaffold.
+
+## Bridge state verification (proof of life)
+
+Socam's REPL communicates through `NSDistributedNotificationCenter`; the bridged app registers to receive `socam/command` and writes / responds with `/tmp/socam.reply`. Round-trip verified on the new AppKit scaffold:
+
+```
+BridgeAppDemo running (pid <yours>)
+$ socam repl dump
+windows=1
+$ socam repl border
+border-on
+$ socam repl quit
+bye
+```
+
 ## Status
 
 Actively scaffolding. Nothing here is stable, but everything listed above works
