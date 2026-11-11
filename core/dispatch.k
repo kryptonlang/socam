@@ -14,6 +14,7 @@ func matchRoute(cmd) {
     if cmd == "list"    { emit "list" }
     if cmd == "gen"     { emit "gen" }
     if cmd == "asset"   { emit "asset" }
+    if cmd == "pack"    { emit "pack" }
     if cmd == "new"     { emit "new" }
     if cmd == "watch"   { emit "watch" }
     if cmd == "version" { emit "version" }

@@ -15,6 +15,7 @@ import "./core/dispatch.k"
 import "./core/scaffold.k"
 import "./core/gen.k"
 import "./core/watch.k"
+import "./core/pack.k"
 import "k:fsx"
 import "k:sh"
 
@@ -36,8 +37,10 @@ func showHelp() {
     print("  socam gen button           Print button-initialization snippet")
     print("  socam gen label            Print label-initialization snippet")
     print("  socam gen delegate         Print objk delegate stub (--protocol=NSWindowDelegate)")
+    print("  socam gen binding          Print KVO binding stub (--target=… --property=…)")
     print("  socam gen asset            Typed NSImage/NSColor accessors")
     print("  socam asset icons <png>    make .iconset folder + Contents.json from a master PNG")
+    print("  socam pack [--app=Foo.app] [--sign] [--dmg] [--iconset=iconset]  sign + dmg-ify")
     print("  socam watch                Watch main.k, rebuild and relaunch on change")
     print("")
     print("environment:")
@@ -52,7 +55,7 @@ func showHelp() {
 }
 
 func showVersion() {
-    print("socam 0.4.0 (Krypton + SmackUI)")
+    print("socam 0.5.0 (Krypton + SmackUI)")
 }
 
 func cmdExplain() {
@@ -144,7 +147,7 @@ func cmdGen() {
         exit("1")
     }
     let target = arg(1)
-    if target == "window" || target == "button" || target == "label" || target == "stack" || target == "split" || target == "table" || target == "delegate" {
+    if target == "window" || target == "button" || target == "label" || target == "stack" || target == "split" || target == "table" || target == "delegate" || target == "binding" {
         let flags = nameFromArgs(2)
         emitSnippet(target, flags)
         exit("0")
@@ -172,6 +175,15 @@ func cmdGen() {
                "}\n"
     writeText(outPath, body)
     print("socam: wrote " + outPath)
+}
+
+func cmdPack() {
+    if argCount() < 2 {
+        print("usage: socam pack [--app=Foo.app] [--sign [ID|auto]] [--dmg [out.dmg]] [--iconset=icon.iconset]\n")
+        exit("1")
+    }
+    doPack()
+    exit("0")
 }
 
 func cmdAsset() {
@@ -228,6 +240,10 @@ just run {
     }
     if route == "new" {
         cmdNew()
+        exit("0")
+    }
+    if route == "pack" {
+        cmdPack()
         exit("0")
     }
     if route == "asset" {
