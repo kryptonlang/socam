@@ -1,8 +1,8 @@
 # socam
 
-**Smack Open-Code Assistance Mechanism** — a native macOS assistance CLI and bridge for the Krypton + SmackUI stack.
+S**ource-Optimized Component Assistance Mechanism** — a native macOS assistance CLI and bridge for the Krypton + SmackUI stack.
 
-`socam` gives you a fast, local-only command line for working with `.k` sources, the krypton compiler pipeline, and the broader SmackUI toolkit. No network calls, no AI back-ends; everything runs against the toolchain you have on disk.
+`socam` gives you a fast, local-only command line for working with `'.k', '.ks' and '.krh'` sources, the krypton compiler pipeline, and the broader SmackUI toolkit. No network calls, no AI back-ends; everything runs against the toolchain you have on disk.
 
 ## Usage
 
@@ -29,12 +29,6 @@ Toolchain resolution order (first match wins):
 2. `/usr/local/krypton/compiler/macos_arm64/kcc-arm64` (installed toolchain)
 3. `<cwd>/compiler/macos_arm64/kcc-arm64` (running inside a krypton checkout)
 4. `<cwd>/../krypton/compiler/macos_arm64/kcc-arm64` (sibling checkout)
-
-## Build
-
-```
-KRYPTON_ROOT=/path/to/krypton  ./bootstrap/kcc_driver_macos_aarch64 bin/socam.k -o socam
-```
 
 ## Layout
 
