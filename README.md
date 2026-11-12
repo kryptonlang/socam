@@ -42,14 +42,16 @@ KRYPTON_ROOT=/path/to/krypton  ./bootstrap/kcc_driver_macos_aarch64 bin/socam.k 
 bin/socam.k          CLI dispatcher / argument parser
 core/assistance.k    Bridge into the krypton compiler (read-IR, count FUNCs)
 core/dispatch.k      Route names and shared context
-tests/test_socam.k   Smoke tests (help, version, list, gen)
+tests/test_socam.k         Smoke tests (help, version, list, gen)
+tests/test_socam_bridge.k  Mock bridge round-trip: dump | status | border | reload | quit
+tests/fixtures/mock_bridge.k  Minimal socam/command bridge used by the round-trip test
 ```
 
 
 ## Milestones 6 and 10 (v0.6.0)
 
-* `socam repl` — interactive IPC session talking to a running bridged app. One-shot form: `socam repl dump`.
-* `socam new app <Name> --bridge` — scaffolds a Krypton AppKit app with a runtime bridge listening on `socam/command` (via `NSDistributedNotificationCenter`). Commands: `dump`, `border`, `reload`, `quit`.
+* `socam repl` — interactive IPC session talking to a running bridged app. One-shot form: `socam repl dump` (also `status`, `border`, `reload`, `quit`).
+* `socam new app <Name> --bridge` — scaffolds a Krypton AppKit app with a runtime bridge listening on `socam/command` (via `NSDistributedNotificationCenter`). Commands: `dump`, `status`, `border`, `reload`, `quit`.
 * `socam gen menu --title=… --items=…` — NSMenu + NSMenuItem stub with optional `--keys=…`.
 * `socam gen statusbar --title=… --icon=… --menu=…` — NSStatusBar + NSStatusItem scaffold.
 
@@ -63,8 +65,10 @@ $ socam repl dump
 windows=1
 $ socam repl border
 border-on
+$ socam repl status
+windows=1
 $ socam repl quit
-bye
+quit
 ```
 
 ## Status

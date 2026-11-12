@@ -51,7 +51,7 @@ func newAppApp(name) {
         "    let cmd = msg(notif, \"object\")\n" +
         "    let tval = nsToStr(cmd)\n" +
         "    let out = \"\"\n" +
-        "    if tval == \"dump\" {\n" +
+        "    if tval == \"dump\" || tval == \"status\" {\n" +
         "        let app = msg(cls(\"NSApplication\"), \"sharedApplication\")\n" +
         "        let wins = msg(app, \"windows\")\n" +
         "        let count = msg(wins, \"count\")\n" +

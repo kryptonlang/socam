@@ -46,7 +46,7 @@ func showHelp() {
     print("  socam gen asset            Typed NSImage/NSColor accessors")
     print("  socam asset icons <png>    make .iconset folder + Contents.json from a master PNG")
     print("  socam pack [--app=Foo.app] [--sign] [--dmg] [--iconset=iconset]  sign + dmg-ify")
-    print("  socam repl                 Live IPC session to the running app (dump|border|reload|quit)")
+    print("  socam repl                 Live IPC session to the running app (dump|border|reload|status|quit)")
     print("  socam watch                Watch main.k, rebuild and relaunch on change")
     print("")
     print("environment:")
