@@ -12,7 +12,7 @@ socam -h | --help           Show this help
 socam version               Print version
 socam explain <file.k>      Compile <file.k> to IR and print statistics
 socam grep <pat> <file>     Matches lines in <file> (prefix match, no regex)
-socam list [<dir>]          Enumerate .k files under <dir> (default: .)
+socam list [<dir>]          Enumerate .k, .ks and .krh files under <dir> (default: .)
 socam gen <name>            Emit a starter module <name>.k
 ```
 
@@ -30,16 +30,24 @@ Toolchain resolution order (first match wins):
 3. `<cwd>/compiler/macos_arm64/kcc-arm64` (running inside a krypton checkout)
 4. `<cwd>/../krypton/compiler/macos_arm64/kcc-arm64` (sibling checkout)
 
+## Build
+
+```
+KRYPTON_ROOT=/path/to/krypton  kcc src/bin/socam.k -o bin/socam
+```
+
+(`bin/socam` is the pre-compiled macOS arm64 CLI shipped with the kit;
+`src/` is the private source tree and is not distributed.)
+
 ## Layout
 
 ```
-bin/socam.k          CLI dispatcher / argument parser
-core/assistance.k    Bridge into the krypton compiler (read-IR, count FUNCs)
-core/dispatch.k      Route names and shared context
-tests/test_socam.k         Smoke tests (help, version, list, gen)
-tests/test_socam_bridge.k  Mock bridge round-trip: dump | status | border | reload | quit
-tests/fixtures/mock_bridge.k  Minimal socam/command bridge used by the round-trip test
+bin/socam             Pre-compiled macOS arm64 CLI (shipped artifact)
 ```
+
+`src/` is the private Krypton source tree and is not part of this public
+repository. Public documentation covers the CLI surface and environment
+variables above.
 
 
 ## Milestones 6 and 10 (v0.6.0)
