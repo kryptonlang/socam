@@ -1,9 +1,9 @@
 // tests/view_test.k — view tree + springs layout + damage + responder chain.
 // Headless: no OS calls. Pure Krypton.
-import "socam/geometry.k"
-import "socam/layout.k"
-import "socam/dirtyrect.k"
-import "socam/view.k"
+import "src/socam/geometry.k"
+import "src/socam/layout.k"
+import "src/socam/dirtyrect.k"
+import "src/socam/view.k"
 import "k:assert"
 
 just run {

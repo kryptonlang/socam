@@ -3,9 +3,9 @@
 //   kcc src/tests/geometry_test.k -o /tmp/geom_test && /tmp/geom_test
 // Prints PASS/FAIL per assertion.
 
-import "socam/geometry.k"
-import "socam/layout.k"
-import "socam/dirtyrect.k"
+import "src/socam/geometry.k"
+import "src/socam/layout.k"
+import "src/socam/dirtyrect.k"
 import "k:assert"
 
 just run {

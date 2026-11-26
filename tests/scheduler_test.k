@@ -1,9 +1,9 @@
 // tests/scheduler_test.k — frame redraw scheduler state machine, headless.
 // Simulates a compositor: bursts of damage, single-flight gating, follow-up
 // frames, teardown. No OS calls; platform backends plug into the same contract.
-import "socam/geometry.k"
-import "socam/dirtyrect.k"
-import "socam/scheduler.k"
+import "src/socam/geometry.k"
+import "src/socam/dirtyrect.k"
+import "src/socam/scheduler.k"
 import "k:assert"
 
 just run {
